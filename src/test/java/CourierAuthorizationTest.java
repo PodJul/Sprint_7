@@ -24,13 +24,13 @@ public class CourierAuthorizationTest {
 
     @Before
     public void createNewCourier() {
-        ((ValidatableResponse)((Response)RestAssured.given().body(this.courier).when().post("courier", new Object[0])).then()).statusCode(201);
+        RestAssured.given().body(this.courier).when().post("courier", new Object[0]).then().statusCode(201);
     }
 
     @After
     public void deleteCourier() {
-        CourierId idReq = (CourierId)((Response)((ValidatableResponse)((Response)RestAssured.given().body(this.courierForLogIn).post("courier/login", new Object[0])).then()).extract().response()).as(CourierId.class);
-        ((ValidatableResponse)((Response)RestAssured.given().delete("courier/{:id}", new Object[]{idReq.getId()})).then()).statusCode(200);
+        CourierId idReq = RestAssured.given().body(this.courierForLogIn).post("courier/login", new Object[0]).then().extract().response().as(CourierId.class);
+        RestAssured.given().delete("courier/{:id}", new Object[]{idReq.getId()}).then().statusCode(200);
     }
 
     @Test
@@ -48,7 +48,7 @@ public class CourierAuthorizationTest {
 
     @Step("Check id not null value and statusCode")
     public void checkIdNotNullValue(Response response) {
-        ((ValidatableResponse)((ValidatableResponse)((ValidatableResponse)response.then()).body("id", Matchers.notNullValue(), new Object[0])).and()).statusCode(200);
+        response.then().body("id", Matchers.notNullValue(), new Object[0]).and().statusCode(200);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class CourierAuthorizationTest {
 
     @Step("Check statusCode")
     public void checkStatusCode(Response response) {
-        ((ValidatableResponse)response.then()).statusCode(400);
+        response.then().statusCode(400);
     }
 
     @Test
@@ -79,26 +79,26 @@ public class CourierAuthorizationTest {
 
     @Step("Check message")
     public void checkMessage(Response response) {
-        ((ValidatableResponse)((ValidatableResponse)response.then()).assertThat()).body("message", Matchers.equalTo("Недостаточно данных для входа"), new Object[0]);
+        response.then().assertThat().body("message", Matchers.equalTo("Недостаточно данных для входа"), new Object[0]);
     }
 
     @Test
     @DisplayName("LogIn without login and check response")
     public void LogInWithoutLoginAndCheckResponse() {
-        Response response = this.sendPostRequestWithoutLogin();
-        this.checkResponse400(response);
+        Response response = sendPostRequestWithoutLogin();
+        checkResponse400(response);
     }
 
     @Step("Send POST request without login to /api/courier/login")
     public Response sendPostRequestWithoutLogin() {
         Courier courierWithoutLogin = new Courier("", "hvost");
-        Response response = (Response)RestAssured.given().body(courierWithoutLogin).when().post("courier/login", new Object[0]);
+        Response response = RestAssured.given().body(courierWithoutLogin).when().post("courier/login", new Object[0]);
         return response;
     }
 
     @Step("Check message and statusCode")
     public void checkResponse400(Response response) {
-        ((ValidatableResponse)((ValidatableResponse)((ValidatableResponse)((ValidatableResponse)response.then()).assertThat()).body("message", Matchers.equalTo("Недостаточно данных для входа"), new Object[0])).and()).statusCode(400);
+        response.then().assertThat().body("message", Matchers.equalTo("Недостаточно данных для входа"), new Object[0]).and().statusCode(400);
     }
 
     @Test
@@ -111,7 +111,7 @@ public class CourierAuthorizationTest {
     @Step("Send POST request without password to /api/courier/login")
     public Response sendPostRequestWithoutPassword() {
         Courier courierWithoutPassword = new Courier("rusalka", "");
-        Response response = (Response)RestAssured.given().body(courierWithoutPassword).when().post("courier/login", new Object[0]);
+        Response response = RestAssured.given().body(courierWithoutPassword).when().post("courier/login", new Object[0]);
         return response;
     }
 
@@ -125,13 +125,13 @@ public class CourierAuthorizationTest {
     @Step("Send POST request without wrong login to /api/courier/login")
     public Response sendPostRequestWithWrongLogin() {
         Courier courierWithWrongLogin = new Courier("shark", "hvost", "");
-        Response response = (Response)RestAssured.given().body(courierWithWrongLogin).when().post("courier/login", new Object[0]);
+        Response response = RestAssured.given().body(courierWithWrongLogin).when().post("courier/login", new Object[0]);
         return response;
     }
 
     @Step("Check message and statusCode")
     public void checkResponse404(Response response) {
-        ((ValidatableResponse)((ValidatableResponse)((ValidatableResponse)((ValidatableResponse)response.then()).assertThat()).body("message", Matchers.equalTo("Учетная запись не найдена"), new Object[0])).and()).statusCode(404);
+        response.then().assertThat().body("message", Matchers.equalTo("Учетная запись не найдена"), new Object[0]).and().statusCode(404);
     }
 
     @Test
@@ -144,7 +144,7 @@ public class CourierAuthorizationTest {
     @Step
     public Response sendPostRequestWithWrongPassword() {
         Courier courierWithWrongPassword = new Courier("rusalka", "wings", "");
-        Response response = (Response)RestAssured.given().body(courierWithWrongPassword).when().post("courier/login", new Object[0]);
+        Response response = RestAssured.given().body(courierWithWrongPassword).when().post("courier/login", new Object[0]);
         return response;
     }
 }

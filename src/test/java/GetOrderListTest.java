@@ -14,8 +14,8 @@ public class GetOrderListTest {
         Specification.installSpec(Specification.requestSpec("http://qa-scooter.praktikum-services.ru", "api/v1"), Specification.responseSpec());
     }
 
-    Courier courier = new Courier("rusalka", "hvost", "Ariel");
-    Courier courierForLogIn = new Courier("rusalka", "hvost");
+    Courier courier = new Courier("nezabudka", "2309", "Julia");
+    Courier courierForLogIn = new Courier("nezabudka", "2309");
 
 
     @Test
