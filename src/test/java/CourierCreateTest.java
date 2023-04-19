@@ -1,18 +1,11 @@
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import pojo.Courier;
 import org.junit.Test;
 import pojo.CourierId;
-
-
-import java.io.IOException;
-
 import static org.hamcrest.Matchers.*;
-
 import static io.restassured.RestAssured.given;
 public class CourierCreateTest {
     @Before
@@ -36,10 +29,10 @@ public class CourierCreateTest {
 
     @Step("Send POST request to /api/v1/courier")
     public Response sendPostRequestCourier() {
-        Response response = given().body(courier)
+        return given().body(courier)
                 .when()
                 .post("courier");
-        return response;
+
     }
 
     @Step("Check body and statusCode")
@@ -79,10 +72,10 @@ public class CourierCreateTest {
 
     @Step("Send double POST request to /api/v1/courier")
     public Response sendDoublePostRequestCourier() {
-        Response newResponse = given().body(courier)
+        return given().body(courier)
                 .when()
                 .post("courier");
-        return newResponse;
+
     }
 
     @Step("Check statusCode 409")
@@ -121,11 +114,11 @@ public class CourierCreateTest {
     @Step("Send POST request to /api/courier with empty required fields")
     public Response sendPostRequestCourierWithEmptyRequiredFields() {
 
-        Response response = given()
+        return given()
                 .body(courierWithoutRequiredFields)
                 .when()
                 .post("courier");
-        return response;
+
     }
 
     @Step("Check statusCode 400")
@@ -134,8 +127,8 @@ public class CourierCreateTest {
     }
 
 
-        @Test
-        @DisplayName("Create courier without required fields and check message")
+    @Test
+    @DisplayName("Create courier without required fields and check message")
         public void createCourierWithoutRequiredFieldsAndCheckMessage () {
             Response response = sendPostRequestCourierWithEmptyRequiredFields();
             checkMessage400(response);
@@ -145,9 +138,8 @@ public class CourierCreateTest {
 
             response.then().assertThat().body("message", equalTo("Недостаточно данных для создания учетной записи"));
         }
-
-        @Test
-        @DisplayName("Create courier without login and check response")
+    @Test
+    @DisplayName("Create courier without login and check response")
         public void createCourierWithoutLoginAndCheckResponse () {
             Response response = sendPostRequestCourierWithoutLogin();
             checkResponse(response);
@@ -156,11 +148,11 @@ public class CourierCreateTest {
         @Step("Send POST request to /api/courier without login")
         public Response sendPostRequestCourierWithoutLogin () {
             Courier courierWithoutLogin = new Courier("", "hvost", "Ariel");
-            Response response = given()
+            return given()
                     .body(courierWithoutLogin)
                     .when()
                     .post("courier");
-            return response;
+
         }
 
         @Step("Check response")
@@ -181,12 +173,11 @@ public class CourierCreateTest {
         @Step("Send POST request to /api/courier without password")
         public Response sendPostRequestCourierWithoutPassword () {
             Courier courierWithoutPassword = new Courier("rusalka", "", "Ariel");
-            Response response = given()
+            return given()
                     .body(courierWithoutPassword)
                     .when()
                     .post("courier");
-            return response;
-        }
+                   }
 
         @Test
         @DisplayName("Create courier without first name and check response")
@@ -200,12 +191,12 @@ public class CourierCreateTest {
         @Step("Send POST request to /api/courier without first name")
         public Response sendPostRequestCourierWithoutFirstName () {
 
-            Response response = given()
+            return given()
                     .body(courierWithoutFirstName)
                     .when()
                     .post("courier")
                     ;
-            return response;
+
 
         }
     @Step("Check response 200")
